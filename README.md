@@ -46,6 +46,11 @@ envault pull --project my-app --env production
 envault list
 ```
 
+**Rotate the encryption key for a vault file:**
+```bash
+envault rotate .env.vault --new-key
+```
+
 ---
 
 ## How It Works
