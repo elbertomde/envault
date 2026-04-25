@@ -83,3 +83,20 @@ def _compute_diff(
             )
 
     return entries
+
+
+def summarize_diff(entries: List[DiffEntry]) -> Dict[str, int]:
+    """Return a count of entries grouped by status.
+
+    Args:
+        entries: A list of DiffEntry objects as returned by ``_compute_diff``.
+
+    Returns:
+        A dictionary mapping each status (``'added'``, ``'removed'``,
+        ``'changed'``, ``'unchanged'``) to the number of entries with that
+        status.  Statuses with a count of zero are omitted.
+    """
+    counts: Dict[str, int] = {}
+    for entry in entries:
+        counts[entry.status] = counts.get(entry.status, 0) + 1
+    return counts
