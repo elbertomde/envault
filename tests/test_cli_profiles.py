@@ -67,3 +67,12 @@ def test_active_profile_marked_in_list(runner, tmp_path):
     runner.invoke(profile_group, ["use", "dev", "--vault-dir", str(tmp_path)])
     result = runner.invoke(profile_group, ["list", "--vault-dir", str(tmp_path)])
     assert "(active)" in result.output
+
+
+def test_remove_active_profile_clears_active(runner, tmp_path):
+    """Removing the currently active profile should clear the active profile state."""
+    runner.invoke(profile_group, ["add", "dev", "--vault-dir", str(tmp_path)])
+    runner.invoke(profile_group, ["use", "dev", "--vault-dir", str(tmp_path)])
+    runner.invoke(profile_group, ["remove", "dev", "--vault-dir", str(tmp_path)])
+    result = runner.invoke(profile_group, ["list", "--vault-dir", str(tmp_path)])
+    assert "(active)" not in result.output
