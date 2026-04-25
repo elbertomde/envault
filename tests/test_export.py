@@ -42,6 +42,13 @@ def test_export_env_wrong_password_raises(vault_file, tmp_path):
         export_env(vault_file, "wrong-password", dest)
 
 
+def test_export_env_missing_vault_raises(tmp_path):
+    """Exporting from a non-existent vault file should raise ExportError."""
+    dest = str(tmp_path / ".env")
+    with pytest.raises(ExportError, match="Cannot read vault"):
+        export_env(str(tmp_path / "nonexistent.vault"), PASSWORD, dest)
+
+
 def test_import_env_creates_vault(tmp_path):
     env_file = tmp_path / ".env"
     env_file.write_text("DB_HOST=localhost\nDB_PORT=5432\n")
