@@ -79,3 +79,12 @@ def test_user_defaults_to_env_user(log_file: Path, monkeypatch: pytest.MonkeyPat
     audit = AuditLog(log_file)
     audit.record("lock")
     assert audit.entries()[0]["user"] == "testuser"
+
+
+def test_entries_returns_copy(log_file: Path) -> None:
+    """Mutating the returned list should not affect the internal log state."""
+    audit = AuditLog(log_file)
+    audit.record("lock")
+    entries = audit.entries()
+    entries.clear()
+    assert len(audit.entries()) == 1
