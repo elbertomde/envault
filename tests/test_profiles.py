@@ -81,3 +81,23 @@ def test_profiles_persisted_to_disk(manager, tmp_path):
     assert profiles_file.exists()
     data = json.loads(profiles_file.read_text())
     assert "ci" in data["profiles"]
+
+
+def test_active_profile_persisted_to_disk(manager, tmp_path):
+    """Verify that the active profile is saved to disk after set_active."""
+    manager.add_profile("staging")
+    manager.set_active("staging")
+    profiles_file = tmp_path / ".envault_profiles.json"
+    data = json.loads(profiles_file.read_text())
+    assert data["active"] == "staging"
+
+
+def test_manager_reloads_state_from_disk(tmp_path):
+    """Verify that a new ProfileManager instance reads persisted state correctly."""
+    manager1 = ProfileManager(vault_dir=str(tmp_path))
+    manager1.add_profile("dev")
+    manager1.set_active("dev")
+
+    manager2 = ProfileManager(vault_dir=str(tmp_path))
+    assert "dev" in manager2.list_profiles()
+    assert manager2.get_active() == "dev"
