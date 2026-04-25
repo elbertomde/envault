@@ -53,6 +53,17 @@ class AuditLog:
         """Return all audit log entries."""
         return list(self._entries)
 
+    def filter_by_action(self, action: str) -> List[dict]:
+        """Return all entries matching the given action.
+
+        Args:
+            action: The action string to filter by (case-sensitive).
+
+        Returns:
+            A list of audit log entries whose ``action`` field equals *action*.
+        """
+        return [entry for entry in self._entries if entry.get("action") == action]
+
     def clear(self) -> None:
         """Remove all audit log entries."""
         self._entries = []
