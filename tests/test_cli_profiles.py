@@ -55,6 +55,13 @@ def test_remove_profile(runner, tmp_path):
     assert "removed" in result.output
 
 
+def test_remove_nonexistent_profile_fails(runner, tmp_path):
+    """Removing a profile that does not exist should exit with a non-zero code."""
+    result = runner.invoke(profile_group, ["remove", "ghost", "--vault-dir", str(tmp_path)])
+    assert result.exit_code == 1
+    assert "Error" in result.output
+
+
 def test_active_profile_marked_in_list(runner, tmp_path):
     runner.invoke(profile_group, ["add", "dev", "--vault-dir", str(tmp_path)])
     runner.invoke(profile_group, ["use", "dev", "--vault-dir", str(tmp_path)])
